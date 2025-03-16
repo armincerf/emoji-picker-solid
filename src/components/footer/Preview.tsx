@@ -1,6 +1,6 @@
 import { cx } from 'flairup';
-import * as React from 'react';
-import { useState } from 'react';
+
+import { createSignal } from 'solid-js';
 
 import {
   commonInteractionStyles,
@@ -34,7 +34,7 @@ export function Preview() {
 
   return (
     <Flex
-      className={cx(styles.preview, commonInteractionStyles.hiddenOnReactions)}
+      class={cx(styles.preview, commonInteractionStyles.hiddenOnReactions)}
     >
       <PreviewBody />
       <Space />
@@ -45,7 +45,7 @@ export function Preview() {
 
 export function PreviewBody() {
   const previewConfig = usePreviewConfig();
-  const [previewEmoji, setPreviewEmoji] = useState<PreviewEmoji>(null);
+  const [previewEmoji, setPreviewEmoji] = createSignal<PreviewEmoji>(null);
   const emojiStyle = useEmojiStyleConfig();
   const [variationPickerEmoji] = useEmojiVariationPickerState();
   const getEmojiUrl = useGetEmojiUrlConfig();
@@ -53,10 +53,10 @@ export function PreviewBody() {
   useEmojiPreviewEvents(previewConfig.showPreview, setPreviewEmoji);
 
   const emoji = emojiByUnified(
-    previewEmoji?.unified ?? previewEmoji?.originalUnified
+    previewEmoji()?.unified ?? previewEmoji()?.originalUnified
   );
 
-  const show = emoji != null && previewEmoji != null;
+  const show = emoji != null && previewEmoji() != null;
 
   return <PreviewContent />;
 
@@ -75,12 +75,12 @@ export function PreviewBody() {
         <div>
           {show ? (
             <ViewOnlyEmoji
-              unified={previewEmoji?.unified as string}
+              unified={previewEmoji()?.unified as string}
               emoji={emoji}
               emojiStyle={emojiStyle}
               size={45}
               getEmojiUrl={getEmojiUrl}
-              className={cx(styles.emoji)}
+              class={cx(styles.emoji)}
             />
           ) : defaultEmoji ? (
             <ViewOnlyEmoji
@@ -89,11 +89,11 @@ export function PreviewBody() {
               emojiStyle={emojiStyle}
               size={45}
               getEmojiUrl={getEmojiUrl}
-              className={cx(styles.emoji)}
+              class={cx(styles.emoji)}
             />
           ) : null}
         </div>
-        <div className={cx(styles.label)}>
+        <div class={cx(styles.label)}>
           {show ? emojiName(emoji) : defaultText}
         </div>
       </>

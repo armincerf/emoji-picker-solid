@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { createMemo } from 'solid-js';
 
 import { focusElement, focusFirstElementChild } from '../DomUtils/focusElement';
 import {
@@ -10,31 +10,37 @@ import {
 export function useFocusSearchInput() {
   const SearchInputRef = useSearchInputRef();
 
-  return useCallback(() => {
-    focusElement(SearchInputRef.current);
-  }, [SearchInputRef]);
+  return createMemo(() => {
+    return () => {
+      focusElement(SearchInputRef.current);
+    };
+  });
 }
 
 export function useFocusSkinTonePicker() {
   const SkinTonePickerRef = useSkinTonePickerRef();
 
-  return useCallback(() => {
-    if (!SkinTonePickerRef.current) {
-      return;
-    }
+  return createMemo(() => {
+    return () => {
+      if (!SkinTonePickerRef.current) {
+        return;
+      }
 
-    focusFirstElementChild(SkinTonePickerRef.current);
-  }, [SkinTonePickerRef]);
+      focusFirstElementChild(SkinTonePickerRef.current);
+    };
+  });
 }
 
 export function useFocusCategoryNavigation() {
   const CategoryNavigationRef = useCategoryNavigationRef();
 
-  return useCallback(() => {
-    if (!CategoryNavigationRef.current) {
-      return;
-    }
+  return createMemo(() => {
+    return () => {
+      if (!CategoryNavigationRef.current) {
+        return;
+      }
 
-    focusFirstElementChild(CategoryNavigationRef.current);
-  }, [CategoryNavigationRef]);
+      focusFirstElementChild(CategoryNavigationRef.current);
+    };
+  });
 }

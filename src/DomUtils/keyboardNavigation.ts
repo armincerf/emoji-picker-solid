@@ -16,7 +16,7 @@ import {
   lastVisibleEmoji,
   nextCategory,
   nextVisibleEmoji,
-  NullableElement,
+  type NullableElement,
   prevCategory,
   prevVisibleEmoji,
   closestCategoryContent

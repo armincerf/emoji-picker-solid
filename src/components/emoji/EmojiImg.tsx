@@ -1,46 +1,44 @@
-import { cx } from 'flairup';
-import * as React from 'react';
+import { cx } from "flairup";
+import { stylesheet } from "../../Stylesheet/stylesheet";
 
-import { stylesheet } from '../../Stylesheet/stylesheet';
-import { EmojiStyle } from '../../types/exposedTypes';
+import { emojiStyles } from "./emojiStyles";
+import type { JSX } from "solid-js/jsx-runtime";
+import type { EmojiStyle } from "../../types/exposedTypes";
+type EmojiImgProps = {
+	imgUrl: string;
+	lazyLoad: boolean;
+	emojiName: string;
+	onError: () => void;
+	style: JSX.CSSProperties;
+	class?: string;
+	emojiStyle: EmojiStyle;
+};
 
-import { emojiStyles } from './emojiStyles';
-
-export function EmojiImg({
-  emojiName,
-  style,
-  lazyLoad = false,
-  imgUrl,
-  onError,
-  className
-}: {
-  emojiName: string;
-  emojiStyle: EmojiStyle;
-  style: React.CSSProperties;
-  lazyLoad?: boolean;
-  imgUrl: string;
-    onError: () => void;
-  className?: string;
-}) {
-  return (
-    <img
-      src={imgUrl}
-      alt={emojiName}
-      className={cx(styles.emojiImag, emojiStyles.external, emojiStyles.common, className)}
-      loading={lazyLoad ? 'lazy' : 'eager'}
-      onError={onError}
-      style={style}
-    />
-  );
+export function EmojiImg(props: EmojiImgProps) {
+	return (
+		<img
+			src={props.imgUrl}
+			alt={props.emojiName}
+			class={cx(
+				styles.emojiImag,
+				emojiStyles.external,
+				emojiStyles.common,
+				props.class,
+			)}
+			loading={props.lazyLoad ? "lazy" : "eager"}
+			onError={props.onError}
+			style={props.style}
+		/>
+	);
 }
 
 const styles = stylesheet.create({
-  emojiImag: {
-    '.': 'epr-emoji-img',
-    maxWidth: 'var(--epr-emoji-fullsize)',
-    maxHeight: 'var(--epr-emoji-fullsize)',
-    minWidth: 'var(--epr-emoji-fullsize)',
-    minHeight: 'var(--epr-emoji-fullsize)',
-    padding: 'var(--epr-emoji-padding)'
-  }
+	emojiImag: {
+		".": "epr-emoji-img",
+		maxWidth: "var(--epr-emoji-fullsize)",
+		maxHeight: "var(--epr-emoji-fullsize)",
+		minWidth: "var(--epr-emoji-fullsize)",
+		minHeight: "var(--epr-emoji-fullsize)",
+		padding: "var(--epr-emoji-padding)",
+	},
 });

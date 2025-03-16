@@ -1,13 +1,13 @@
 import { Categories } from '../config/categoryConfig';
 import { cdnUrl } from '../config/cdnUrls';
-import { CustomEmoji } from '../config/customEmojiConfig';
+import type { CustomEmoji } from '../config/customEmojiConfig';
 import emojis from '../data/emojis';
 import skinToneVariations, {
   skinTonesMapped
 } from '../data/skinToneVariations';
-import { EmojiStyle, SkinTones } from '../types/exposedTypes';
+import type { EmojiStyle, SkinTones } from '../types/exposedTypes';
 
-import { DataEmoji, DataEmojis, EmojiProperties, WithName } from './DataTypes';
+import { type DataEmoji, type DataEmojis, EmojiProperties, type WithName } from './DataTypes';
 import { indexEmoji } from './alphaNumericEmojiIndex';
 
 export function emojiNames(emoji: WithName): string[] {
@@ -15,7 +15,7 @@ export function emojiNames(emoji: WithName): string[] {
 }
 
 export function addedIn(emoji: DataEmoji): number {
-  return parseFloat(emoji[EmojiProperties.added_in]);
+  return Number.parseFloat(emoji[EmojiProperties.added_in]);
 }
 
 export function emojiName(emoji?: WithName): string {

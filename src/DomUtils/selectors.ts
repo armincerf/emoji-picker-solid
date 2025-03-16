@@ -1,4 +1,4 @@
-import { DataEmoji } from '../dataUtils/DataTypes';
+import type { DataEmoji } from '../dataUtils/DataTypes';
 import {
   emojiByUnified,
   unifiedWithoutSkinTone

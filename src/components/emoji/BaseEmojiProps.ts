@@ -1,6 +1,6 @@
-import { CustomEmoji } from '../../config/customEmojiConfig';
-import { DataEmoji } from '../../dataUtils/DataTypes';
-import { EmojiStyle } from '../../types/exposedTypes';
+import type { CustomEmoji } from '../../config/customEmojiConfig';
+import type { DataEmoji } from '../../dataUtils/DataTypes';
+import type { EmojiStyle } from '../../types/exposedTypes';
 
 export type BaseEmojiProps = {
   emoji?: DataEmoji | CustomEmoji;
@@ -9,6 +9,6 @@ export type BaseEmojiProps = {
   size?: number;
   lazyLoad?: boolean;
   getEmojiUrl?: GetEmojiUrl;
-  className?: string;
+  class?: string;
 };
 export type GetEmojiUrl = (unified: string, style: EmojiStyle) => string;

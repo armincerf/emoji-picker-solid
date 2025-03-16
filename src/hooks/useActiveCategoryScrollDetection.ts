@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { createEffect } from 'solid-js';
 
 import { categoryNameFromDom } from '../DomUtils/categoryNameFromDom';
 import { asSelectors, ClassNames } from '../DomUtils/classNames';
@@ -9,7 +9,7 @@ export function useActiveCategoryScrollDetection(
 ) {
   const BodyRef = useBodyRef();
 
-  useEffect(() => {
+  createEffect(() => {
     const visibleCategories = new Map();
     const bodyRef = BodyRef.current;
     const observer = new IntersectionObserver(
@@ -26,7 +26,7 @@ export function useActiveCategoryScrollDetection(
         const ratios = Array.from(visibleCategories);
         const lastCategory = ratios[ratios.length - 1];
 
-        if (lastCategory[1] == 1) {
+        if (lastCategory[1] === 1) {
           return setActiveCategory(lastCategory[0]);
         }
 
@@ -41,8 +41,17 @@ export function useActiveCategoryScrollDetection(
         threshold: [0, 1]
       }
     );
-    bodyRef?.querySelectorAll(asSelectors(ClassNames.category)).forEach(el => {
-      observer.observe(el);
-    });
-  }, [BodyRef, setActiveCategory]);
+    
+    if (bodyRef) {
+      const elements = Array.from(bodyRef.querySelectorAll(asSelectors(ClassNames.category)));
+      for (const el of elements) {
+        observer.observe(el);
+      }
+    }
+
+    // Cleanup function
+    return () => {
+      observer.disconnect();
+    };
+  });
 }

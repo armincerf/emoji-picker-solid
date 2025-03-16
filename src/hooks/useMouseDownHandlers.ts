@@ -1,10 +1,9 @@
-import * as React from 'react';
-import { useEffect, useRef } from 'react';
+import { createEffect, createMemo } from 'solid-js';
 
 import {
   emojiFromElement,
   isEmojiElement,
-  NullableElement
+  type NullableElement
 } from '../DomUtils/selectors';
 import {
   useActiveSkinToneState,
@@ -12,14 +11,14 @@ import {
   useEmojiVariationPickerState,
   useUpdateSuggested
 } from '../components/context/PickerContext';
-import { GetEmojiUrl } from '../components/emoji/BaseEmojiProps';
+import type { GetEmojiUrl } from '../components/emoji/BaseEmojiProps';
 import {
-  MOUSE_EVENT_SOURCE,
+  type MOUSE_EVENT_SOURCE,
   useEmojiStyleConfig,
   useGetEmojiUrlConfig,
   useOnEmojiClickConfig
 } from '../config/useConfig';
-import { DataEmoji } from '../dataUtils/DataTypes';
+import type { DataEmoji } from '../dataUtils/DataTypes';
 import {
   activeVariationFromUnified,
   emojiHasVariations,
@@ -29,16 +28,16 @@ import {
 import { parseNativeEmoji } from '../dataUtils/parseNativeEmoji';
 import { setSuggested } from '../dataUtils/suggested';
 import { isCustomEmoji } from '../typeRefinements/typeRefinements';
-import { EmojiClickData, SkinTones, EmojiStyle } from '../types/exposedTypes';
+import { type EmojiClickData, type SkinTones, EmojiStyle } from '../types/exposedTypes';
 
 import { useCloseAllOpenToggles } from './useCloseAllOpenToggles';
 import useSetVariationPicker from './useSetVariationPicker';
 
 export function useMouseDownHandlers(
-  ContainerRef: React.MutableRefObject<NullableElement>,
+  ContainerRef: { current: NullableElement },
   mouseEventSource: MOUSE_EVENT_SOURCE
 ) {
-  const mouseDownTimerRef = useRef<undefined | number>();
+  let mouseDownTimer: number | undefined;
   const setVariationPicker = useSetVariationPicker();
   const disallowClickRef = useDisallowClickRef();
   const [, setEmojiVariationPicker] = useEmojiVariationPickerState();
@@ -49,8 +48,8 @@ export function useMouseDownHandlers(
   const getEmojiUrl = useGetEmojiUrlConfig();
   const activeEmojiStyle = useEmojiStyleConfig();
 
-  const onClick = React.useCallback(
-    function onClick(event: MouseEvent) {
+  const onClick = createMemo(() => {
+    return function onClick(event: MouseEvent) {
       if (disallowClickRef.current) {
         return;
       }
@@ -72,22 +71,13 @@ export function useMouseDownHandlers(
         emojiClickOutput(emoji, skinToneToUse, activeEmojiStyle, getEmojiUrl),
         event
       );
-    },
-    [
-      activeSkinTone,
-      closeAllOpenToggles,
-      disallowClickRef,
-      onEmojiClick,
-      updateSuggested,
-      getEmojiUrl,
-      activeEmojiStyle
-    ]
-  );
+    };
+  });
 
-  const onMouseDown = React.useCallback(
-    function onMouseDown(event: MouseEvent) {
-      if (mouseDownTimerRef.current) {
-        clearTimeout(mouseDownTimerRef.current);
+  const onMouseDown = createMemo(() => {
+    return function onMouseDown(event: MouseEvent) {
+      if (mouseDownTimer) {
+        clearTimeout(mouseDownTimer);
       }
 
       const [emoji] = emojiFromEvent(event);
@@ -96,26 +86,21 @@ export function useMouseDownHandlers(
         return;
       }
 
-      mouseDownTimerRef.current = window?.setTimeout(() => {
+      mouseDownTimer = window?.setTimeout(() => {
         disallowClickRef.current = true;
-        mouseDownTimerRef.current = undefined;
+        mouseDownTimer = undefined;
         closeAllOpenToggles();
         setVariationPicker(event.target as HTMLElement);
         setEmojiVariationPicker(emoji);
       }, 500);
-    },
-    [
-      disallowClickRef,
-      closeAllOpenToggles,
-      setVariationPicker,
-      setEmojiVariationPicker
-    ]
-  );
-  const onMouseUp = React.useCallback(
-    function onMouseUp() {
-      if (mouseDownTimerRef.current) {
-        clearTimeout(mouseDownTimerRef.current);
-        mouseDownTimerRef.current = undefined;
+    };
+  });
+
+  const onMouseUp = createMemo(() => {
+    return function onMouseUp() {
+      if (mouseDownTimer) {
+        clearTimeout(mouseDownTimer);
+        mouseDownTimer = undefined;
       } else if (disallowClickRef.current) {
         // The problem we're trying to overcome here
         // is that the emoji has both mouseup and click events
@@ -127,32 +112,31 @@ export function useMouseDownHandlers(
           disallowClickRef.current = false;
         });
       }
-    },
-    [disallowClickRef]
-  );
+    };
+  });
 
-  useEffect(() => {
+  createEffect(() => {
     if (!ContainerRef.current) {
       return;
     }
-    const confainerRef = ContainerRef.current;
-    confainerRef.addEventListener('click', onClick, {
+    const containerRef = ContainerRef.current;
+    containerRef.addEventListener('click', onClick(), {
       passive: true
     });
 
-    confainerRef.addEventListener('mousedown', onMouseDown, {
+    containerRef.addEventListener('mousedown', onMouseDown(), {
       passive: true
     });
-    confainerRef.addEventListener('mouseup', onMouseUp, {
+    containerRef.addEventListener('mouseup', onMouseUp(), {
       passive: true
     });
 
     return () => {
-      confainerRef?.removeEventListener('click', onClick);
-      confainerRef?.removeEventListener('mousedown', onMouseDown);
-      confainerRef?.removeEventListener('mouseup', onMouseUp);
+      containerRef?.removeEventListener('click', onClick());
+      containerRef?.removeEventListener('mousedown', onMouseDown());
+      containerRef?.removeEventListener('mouseup', onMouseUp());
     };
-  }, [ContainerRef, onClick, onMouseDown, onMouseUp]);
+  });
 }
 
 function emojiFromEvent(event: MouseEvent): [DataEmoji, string] | [] {

@@ -1,13 +1,13 @@
-import { useEffect } from 'react';
+import { createEffect } from 'solid-js';
 
-import { ElementRef } from '../components/context/ElementRefContext';
+import type { ElementRef } from '../components/context/ElementRefContext';
 
 import { useCloseAllOpenToggles } from './useCloseAllOpenToggles';
 
 export function useOnScroll(BodyRef: ElementRef) {
   const closeAllOpenToggles = useCloseAllOpenToggles();
 
-  useEffect(() => {
+  createEffect(() => {
     const bodyRef = BodyRef.current;
     if (!bodyRef) {
       return;
@@ -24,5 +24,5 @@ export function useOnScroll(BodyRef: ElementRef) {
     return () => {
       bodyRef?.removeEventListener('scroll', onScroll);
     };
-  }, [BodyRef, closeAllOpenToggles]);
+  });
 }

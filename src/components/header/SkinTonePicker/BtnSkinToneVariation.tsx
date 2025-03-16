@@ -1,9 +1,9 @@
 import { cx } from 'flairup';
-import * as React from 'react';
+import type { JSX } from 'solid-js';
 
 import { stylesheet } from '../../../Stylesheet/stylesheet';
 import { skinTonesNamed } from '../../../data/skinToneVariations';
-import { SkinTones } from '../../../types/exposedTypes';
+import type { SkinTones } from '../../../types/exposedTypes';
 import { Button } from '../../atoms/Button';
 
 type Props = {
@@ -11,7 +11,7 @@ type Props = {
   onClick: () => void;
   isActive: boolean;
   skinToneVariation: SkinTones;
-  style?: React.CSSProperties;
+  style?: JSX.CSSProperties;
 };
 
 // eslint-disable-next-line complexity
@@ -26,7 +26,7 @@ export function BtnSkinToneVariation({
     <Button
       style={style}
       onClick={onClick}
-      className={cx(
+      class={cx(
         `epr-tone-${skinToneVariation}`,
         styles.tone,
         !isOpen && styles.closedTone,
@@ -34,7 +34,7 @@ export function BtnSkinToneVariation({
       )}
       aria-pressed={isActive}
       aria-label={`Skin tone ${skinTonesNamed[skinToneVariation as SkinTones]}`}
-    ></Button>
+    />
   );
 }
 

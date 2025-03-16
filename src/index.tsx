@@ -1,18 +1,18 @@
-import { JSX, createContext, createSignal } from 'solid-js';
+import { type JSX } from 'solid-js';
 
 import EmojiPickerSolid from './EmojiPickerSolid';
 import ErrorBoundary from './components/ErrorBoundary';
-import { PickerConfig } from './config/config';
-import { createMutableConfig, MutableConfigContext } from './config/mutableConfig';
+import type { PickerConfig } from './config/config';
+import { useDefineMutableConfig as createMutableConfig, MutableConfigContext } from './config/mutableConfig';
 
 export { ExportedEmoji as Emoji } from './components/emoji/ExportedEmoji';
 
+export type { EmojiClickData } from './types/exposedTypes';
 export {
   EmojiStyle,
   SkinTones,
   Theme,
   Categories,
-  EmojiClickData,
   SuggestionMode,
   SkinTonePickerLocation
 } from './types/exposedTypes';

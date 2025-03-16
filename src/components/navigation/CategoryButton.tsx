@@ -1,5 +1,5 @@
 import { cx } from 'flairup';
-import * as React from 'react';
+
 
 import { ClassNames } from '../../DomUtils/classNames';
 import {
@@ -8,7 +8,7 @@ import {
   stylesheet
 } from '../../Stylesheet/stylesheet';
 import {
-  CategoryConfig,
+  type CategoryConfig,
   categoryNameFromCategoryConfig
 } from '../../config/categoryConfig';
 import { Button } from '../atoms/Button';
@@ -33,7 +33,7 @@ export function CategoryButton({
   return (
     <Button
       tabIndex={allowNavigation ? 0 : -1}
-      className={cx(
+      class={cx(
         styles.catBtn,
         commonInteractionStyles.categoryBtn,
         `epr-icn-${category}`,

@@ -1,7 +1,7 @@
 import { DEFAULT_LABEL_HEIGHT } from '../components/main/PickerMain';
 
 import { ClassNames, asSelectors } from './classNames';
-import { NullableElement } from './selectors';
+import type { NullableElement } from './selectors';
 
 export function elementCountInRow(
   parent: NullableElement,

@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { createMemo } from 'solid-js';
 
 import {
   useEmojiVariationPickerState,
@@ -9,20 +9,17 @@ export function useCloseAllOpenToggles() {
   const [variationPicker, setVariationPicker] = useEmojiVariationPickerState();
   const [skinToneFanOpen, setSkinToneFanOpen] = useSkinToneFanOpenState();
 
-  const closeAllOpenToggles = useCallback(() => {
-    if (variationPicker) {
-      setVariationPicker(null);
-    }
+  const closeAllOpenToggles = createMemo(() => {
+    return () => {
+      if (variationPicker) {
+        setVariationPicker(null);
+      }
 
-    if (skinToneFanOpen) {
-      setSkinToneFanOpen(false);
-    }
-  }, [
-    variationPicker,
-    skinToneFanOpen,
-    setVariationPicker,
-    setSkinToneFanOpen
-  ]);
+      if (skinToneFanOpen) {
+        setSkinToneFanOpen(false);
+      }
+    };
+  });
 
   return closeAllOpenToggles;
 }

@@ -74,7 +74,7 @@ export function baseCategoriesConfig(
   return categoriesOrdered.map(category => {
     return {
       ...configByCategory[category],
-      ...(modifiers && modifiers[category] && modifiers[category])
+      ...(modifiers?.[category])
     };
   });
 }

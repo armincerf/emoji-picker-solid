@@ -4,12 +4,12 @@ import {
   useSearchInputRef
 } from '../components/context/ElementRefContext';
 import {
-  FilterState,
+  type FilterState,
   useFilterRef,
   useSearchTermState
 } from '../components/context/PickerContext';
 import { useSearchResultsConfig } from '../config/useConfig';
-import { DataEmoji } from '../dataUtils/DataTypes';
+import type { DataEmoji } from '../dataUtils/DataTypes';
 import { emojiNames } from '../dataUtils/emojiSelectors';
 
 import { useFocusSearchInput } from './useFocus';

@@ -1,34 +1,34 @@
-import { cx } from 'flairup';
-import * as React from 'react';
+import { cx } from "flairup";
+import { type JSX, splitProps } from "solid-js";
 
-import { stylesheet } from '../../Stylesheet/stylesheet';
+import { stylesheet } from "../../Stylesheet/stylesheet";
 
-interface Props
-  extends React.DetailedHTMLProps<
-    React.ButtonHTMLAttributes<HTMLButtonElement>,
-    HTMLButtonElement
-  > {
-  className?: string;
-}
+// Define the Props type using Solid.js's JSX namespace
+type ButtonProps = JSX.ButtonHTMLAttributes<HTMLButtonElement> & {
+	class?: string;
+};
 
-export function Button(props: Props) {
-  return (
-    <button
-      type="button"
-      {...props}
-      className={cx(styles.button, props.className)}
-    >
-      {props.children}
-    </button>
-  );
+export function Button(props: ButtonProps) {
+	// Use splitProps to separate children and className from other props
+	const [local, others] = splitProps(props, ["children", "class"]);
+
+	return (
+		<button
+			type="button"
+			{...others}
+			class={cx(styles.button, local.class)}
+		>
+			{local.children}
+		</button>
+	);
 }
 
 const styles = stylesheet.create({
-  button: {
-    '.': 'epr-btn',
-    cursor: 'pointer',
-    border: '0',
-    background: 'none',
-    outline: 'none'
-  }
+	button: {
+		".": "epr-btn",
+		cursor: "pointer",
+		border: "0",
+		background: "none",
+		outline: "none",
+	},
 });

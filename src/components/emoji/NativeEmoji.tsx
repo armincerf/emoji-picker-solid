@@ -1,5 +1,5 @@
 import { cx } from 'flairup';
-import * as React from 'react';
+import type { JSX } from 'solid-js';
 
 import { stylesheet } from '../../Stylesheet/stylesheet';
 import { parseNativeEmoji } from '../../dataUtils/parseNativeEmoji';
@@ -9,15 +9,15 @@ import { emojiStyles } from './emojiStyles';
 export function NativeEmoji({
   unified,
   style,
-  className
+  class: className
 }: {
   unified: string;
-  style: React.CSSProperties;
-  className?: string;
+  style: JSX.CSSProperties;
+  class?: string;
 }) {
   return (
     <span
-      className={cx(
+      class={cx(
         styles.nativeEmoji,
         emojiStyles.common,
         emojiStyles.external,

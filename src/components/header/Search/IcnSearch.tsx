@@ -1,12 +1,12 @@
 import { cx } from 'flairup';
-import * as React from 'react';
+
 
 import { darkMode, stylesheet } from '../../../Stylesheet/stylesheet';
 
 import SVGMagnifier from './svg/magnifier.svg';
 
 export function IcnSearch() {
-  return <div className={cx(styles.icnSearch)} />;
+  return <div class={cx(styles.icnSearch)} />;
 }
 
 const styles = stylesheet.create({

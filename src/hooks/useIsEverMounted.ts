@@ -1,14 +1,14 @@
-import * as React from 'react';
+import { createSignal, createEffect } from 'solid-js';
 
 let isEverMounted = false;
 
 export function useIsEverMounted() {
-  const [isMounted, setIsMounted] = React.useState(isEverMounted);
+  const [isMounted, setIsMounted] = createSignal(isEverMounted);
 
-  React.useEffect(() => {
+  createEffect(() => {
     setIsMounted(true);
     isEverMounted = true;
-  }, []);
+  });
 
-  return isMounted || isEverMounted;
+  return isMounted() || isEverMounted;
 }

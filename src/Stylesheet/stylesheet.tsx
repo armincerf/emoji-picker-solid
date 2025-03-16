@@ -1,5 +1,5 @@
-import { Styles, createSheet } from 'flairup';
-import * as React from 'react';
+import { type Styles, createSheet } from 'flairup';
+
 
 import { ClassNames } from '../DomUtils/classNames';
 
@@ -20,14 +20,11 @@ export const commonStyles = stylesheet.create({
   }
 });
 
-export const PickerStyleTag = React.memo(function PickerStyleTag() {
+export function PickerStyleTag() {
   return (
-    <style
-      suppressHydrationWarning
-      dangerouslySetInnerHTML={{ __html: stylesheet.getStyle() }}
-    />
+    <style innerHTML={stylesheet.getStyle()} />
   );
-});
+}
 
 export const commonInteractionStyles = stylesheet.create({
   '.epr-main': {
@@ -77,7 +74,15 @@ export const commonInteractionStyles = stylesheet.create({
   }
 });
 
-export function darkMode(key: string, value: Styles) {
+type DarkModeStyles = {
+  [selector: string]: {
+    [key: string]: Styles | {
+      '@media (prefers-color-scheme: dark)': Styles
+    }
+  }
+};
+
+export function darkMode(key: string, value: Styles): DarkModeStyles {
   return {
     '.epr-dark-theme': {
       [key]: value

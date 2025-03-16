@@ -1,24 +1,20 @@
 {
   "name": "example",
   "version": "1.0.0",
-  "main": "index.js",
+  "type": "module",
   "license": "MIT",
   "scripts": {
-    "start": "parcel index.html",
-    "build": "parcel build index.html"
+    "start": "vite",
+    "build": "vite build",
+    "serve": "vite preview"
   },
   "dependencies": {
-    "react-app-polyfill": "^1.0.0"
-  },
-  "alias": {
-    "react": "../node_modules/react",
-    "react-dom": "../node_modules/react-dom/profiling",
-    "scheduler/tracing": "../node_modules/scheduler/tracing-profiling"
+    "solid-js": "^1.9.5",
+    "emoji-picker-solid": "file:.."
   },
   "devDependencies": {
-    "@types/react": "^16.9.11",
-    "@types/react-dom": "^16.8.4",
-    "parcel": "1.12.3",
-    "typescript": "^3.4.5"
+    "typescript": "^5.8.2",
+    "vite": "^6.2.2",
+    "vite-plugin-solid": "^2.11.6"
   }
 }

@@ -1,6 +1,6 @@
 import { cx } from 'flairup';
-import * as React from 'react';
-import { useState } from 'react';
+
+import { createSignal, For } from 'solid-js';
 
 import { stylesheet } from '../../Stylesheet/stylesheet';
 import { categoryFromCategoryConfig } from '../../config/categoryConfig';
@@ -15,7 +15,7 @@ import { useCategoryNavigationRef } from '../context/ElementRefContext';
 import { CategoryButton } from './CategoryButton';
 
 export function CategoryNavigation() {
-  const [activeCategory, setActiveCategory] = useState<string | null>(null);
+  const [activeCategory, setActiveCategory] = createSignal<string | null>(null);
   const scrollCategoryIntoView = useScrollCategoryIntoView();
   useActiveCategoryScrollDetection(setActiveCategory);
   const isSearchMode = useIsSearchMode();
@@ -26,36 +26,39 @@ export function CategoryNavigation() {
 
   return (
     <div
-      className={cx(styles.nav)}
+      class={cx(styles.nav)}
       role="tablist"
       aria-label="Category navigation"
       id="epr-category-nav-id"
-      ref={CategoryNavigationRef}
+      ref={(el) => {
+        if (CategoryNavigationRef) CategoryNavigationRef.current = el;
+      }}
     >
-      {categoriesConfig.map(categoryConfig => {
-        const category = categoryFromCategoryConfig(categoryConfig);
-        const isActiveCategory = category === activeCategory;
+      <For each={categoriesConfig}>
+        {(categoryConfig) => {
+          const category = categoryFromCategoryConfig(categoryConfig);
+          const isActiveCategory = category === activeCategory();
 
-        if (isCustomCategory(categoryConfig) && hideCustomCategory) {
-          return null;
-        }
+          if (isCustomCategory(categoryConfig) && hideCustomCategory) {
+            return null;
+          }
 
-        const allowNavigation = !isSearchMode && !isActiveCategory;
+          const allowNavigation = !isSearchMode && !isActiveCategory;
 
-        return (
-          <CategoryButton
-            key={category}
-            category={category}
-            isActiveCategory={isActiveCategory}
-            allowNavigation={allowNavigation}
-            categoryConfig={categoryConfig}
-            onClick={() => {
-              setActiveCategory(category);
-              scrollCategoryIntoView(category);
-            }}
-          />
-        );
-      })}
+          return (
+            <CategoryButton
+              category={category}
+              isActiveCategory={isActiveCategory}
+              allowNavigation={allowNavigation}
+              categoryConfig={categoryConfig}
+              onClick={() => {
+                setActiveCategory(category);
+                scrollCategoryIntoView(category);
+              }}
+            />
+          );
+        }}
+      </For>
     </div>
   );
 }

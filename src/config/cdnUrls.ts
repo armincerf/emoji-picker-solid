@@ -17,7 +17,6 @@ export function cdnUrl(emojiStyle: EmojiStyle): string {
       return CDN_URL_GOOGLE;
     case EmojiStyle.FACEBOOK:
       return CDN_URL_FACEBOOK;
-    case EmojiStyle.APPLE:
     default:
       return CDN_URL_APPLE;
   }

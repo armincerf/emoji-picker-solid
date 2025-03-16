@@ -1,5 +1,5 @@
 import { cx } from 'flairup';
-import * as React from 'react';
+
 
 import {
   commonInteractionStyles,
@@ -16,7 +16,7 @@ export function BtnClearSearch() {
 
   return (
     <Button
-      className={cx(
+      class={cx(
         styles.btnClearSearch,
         commonInteractionStyles.visibleOnSearchOnly
       )}
@@ -24,7 +24,7 @@ export function BtnClearSearch() {
       aria-label="Clear"
       title="Clear"
     >
-      <div className={cx(styles.icnClearnSearch)} />
+      <div class={cx(styles.icnClearnSearch)} />
     </Button>
   );
 }

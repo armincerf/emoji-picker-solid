@@ -1,8 +1,7 @@
 /* eslint-disable complexity */
 import { cx } from 'flairup';
-import * as React from 'react';
+import { Index } from 'solid-js';
 
-import { ClassNames } from '../../../DomUtils/classNames';
 import { stylesheet } from '../../../Stylesheet/stylesheet';
 import {
   useOnSkinToneChangeConfig,
@@ -29,7 +28,7 @@ type Props = {
 
 export function SkinTonePickerMenu() {
   return (
-    <Relative style={{ height: ITEM_SIZE }}>
+    <Relative style={{ height: `${ITEM_SIZE}px` }}>
       <Absolute style={{ bottom: 0, right: 0 }}>
         <SkinTonePicker direction={SkinTonePickerDirection.VERTICAL} />
       </Absolute>
@@ -37,9 +36,8 @@ export function SkinTonePickerMenu() {
   );
 }
 
-export function SkinTonePicker({
-  direction = SkinTonePickerDirection.HORIZONTAL
-}: Props) {
+export function SkinTonePicker(props: Props) {
+  const direction = props.direction || SkinTonePickerDirection.HORIZONTAL;
   const SkinTonePickerRef = useSkinTonePickerRef();
   const isDisabled = useSkinTonesDisabledConfig();
   const [isOpen, setIsOpen] = useSkinToneFanOpenState();
@@ -54,13 +52,19 @@ export function SkinTonePicker({
 
   const fullWidth = `${ITEM_SIZE * skinToneVariations.length}px`;
 
-  const expandedSize = isOpen ? fullWidth : ITEM_SIZE + 'px';
+  const expandedSize = isOpen ? fullWidth : `${ITEM_SIZE}px`;
 
   const vertical = direction === SkinTonePickerDirection.VERTICAL;
 
+  const setRef = (el: HTMLDivElement) => {
+    if (SkinTonePickerRef && SkinTonePickerRef.current !== el) {
+      SkinTonePickerRef.current = el;
+    }
+  };
+
   return (
     <Relative
-      className={cx(
+      class={cx(
         styles.skinTones,
         vertical && styles.vertical,
         isOpen && styles.open,
@@ -68,49 +72,50 @@ export function SkinTonePicker({
       )}
       style={
         vertical
-          ? { flexBasis: expandedSize, height: expandedSize }
-          : { flexBasis: expandedSize }
+          ? { "flex-basis": expandedSize, height: expandedSize }
+          : { "flex-basis": expandedSize }
       }
     >
-      <div className={cx(styles.select)} ref={SkinTonePickerRef}>
-        {skinToneVariations.map((skinToneVariation, i) => {
-          const active = skinToneVariation === activeSkinTone;
-
-          return (
-            <BtnSkinToneVariation
-              key={skinToneVariation}
-              skinToneVariation={skinToneVariation}
-              isOpen={isOpen}
-              style={{
-                transform: cx(
-                  vertical
-                    ? `translateY(-${i * (isOpen ? ITEM_SIZE : 0)}px)`
-                    : `translateX(-${i * (isOpen ? ITEM_SIZE : 0)}px)`,
-                  isOpen && active && 'scale(1.3)'
-                )
-              }}
-              isActive={active}
-              onClick={() => {
-                if (isOpen) {
-                  setActiveSkinTone(skinToneVariation);
-                  onSkinToneChange(skinToneVariation);
-                  focusSearchInput();
-                } else {
-                  setIsOpen(true);
-                }
-                closeAllOpenToggles();
-              }}
-            />
-          );
-        })}
+      <div class={cx(styles.select)} ref={setRef}>
+        <Index each={skinToneVariations}>
+          {(skinToneVariation, i) => {
+            const active = skinToneVariation() === activeSkinTone;
+            
+            return (
+              <BtnSkinToneVariation
+                skinToneVariation={skinToneVariation()}
+                isOpen={isOpen}
+                style={{
+                  transform: cx(
+                    vertical
+                      ? `translateY(-${i * (isOpen ? ITEM_SIZE : 0)}px)`
+                      : `translateX(-${i * (isOpen ? ITEM_SIZE : 0)}px)`,
+                    isOpen && active && 'scale(1.3)'
+                  )
+                }}
+                isActive={active}
+                onClick={() => {
+                  if (isOpen) {
+                    setActiveSkinTone(skinToneVariation());
+                    onSkinToneChange(skinToneVariation());
+                    focusSearchInput();
+                  } else {
+                    setIsOpen(true);
+                  }
+                  closeAllOpenToggles();
+                }}
+              />
+            );
+          }}
+        </Index>
       </div>
     </Relative>
   );
 }
 
 export enum SkinTonePickerDirection {
-  VERTICAL = ClassNames.vertical,
-  HORIZONTAL = ClassNames.horizontal
+  VERTICAL = "vertical",
+  HORIZONTAL = "horizontal"
 }
 
 const styles = stylesheet.create({

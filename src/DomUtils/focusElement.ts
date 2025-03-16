@@ -1,4 +1,4 @@
-import { NullableElement } from './selectors';
+import type { NullableElement } from './selectors';
 
 export function focusElement(element: NullableElement) {
   if (!element) {

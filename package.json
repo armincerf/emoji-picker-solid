@@ -1,9 +1,13 @@
 {
 	"version": "1.0.0",
 	"license": "MIT",
-	"main": "dist/index.js",
+	"main": "./dist/index.cjs",
 	"typings": "dist/index.d.ts",
-	"files": ["dist", "src"],
+	"type": "module",
+	"files": [
+		"dist",
+		"src"
+	],
 	"description": "Emoji Picker component for Solid.js Applications on the web",
 	"keywords": [
 		"emoji-picker",
@@ -23,23 +27,22 @@
 		"url": "https://github.com/armincerf/emoji-picker-solid.git"
 	},
 	"scripts": {
-		"start": "tsdx watch",
-		"build": "node ./scripts/prepare.js && yarn type-check && tsdx build --transpileOnly && node ./scripts/copyData.js",
+		"start": "tsup --watch",
+		"build": "node ./scripts/prepare.js && bun type-check && tsup && node ./scripts/copyData.js",
 		"type-check": "tsc --noEmit --incremental --pretty --project tsconfig.json",
-		"test": "tsdx test --passWithNoTests",
-		"lint": "eslint ./src --ext .ts,.tsx",
-		"prepare": "yarn type-check && tsdx build --transpileOnly",
+		"test": "vitest run",
+		"lint": "biome check ./src --ext .ts,.tsx",
+		"prepare": "bun type-check && tsup",
 		"size": "size-limit",
 		"analyze": "size-limit --why",
-		"storybook": "storybook dev -p 6006",
-		"build-storybook": "storybook build"
+		"dev": "tsup --watch"
 	},
 	"peerDependencies": {
 		"solid-js": "^1.7.0"
 	},
 	"husky": {
 		"hooks": {
-			"pre-commit": "yarn lint"
+			"pre-commit": "bun lint"
 		}
 	},
 	"prettier": {
@@ -49,58 +52,51 @@
 	},
 	"name": "emoji-picker-solid",
 	"author": "armincerf",
-	"module": "dist/emoji-picker-solid.esm.js",
+	"module": "./dist/index.js",
 	"size-limit": [
 		{
-			"path": "dist/emoji-picker-solid.cjs.production.min.js",
-			"limit": "10 KB"
-		},
-		{
-			"path": "dist/emoji-picker-solid.esm.js",
+			"path": "dist/index.js",
 			"limit": "10 KB"
 		}
 	],
 	"devDependencies": {
-		"@babel/core": "^7.18.10",
-		"@babel/preset-react": "^7.24.1",
-		"@babel/preset-typescript": "^7.24.1",
-		"@size-limit/preset-small-lib": "^8.0.1",
-		"@storybook/addon-essentials": "^8.1.1",
-		"@storybook/addon-info": "^5.3.21",
-		"@storybook/addon-links": "^8.1.1",
-		"@storybook/addon-webpack5-compiler-swc": "1.0.2",
-		"@storybook/addons": "^7.6.17",
-		"@storybook/react": "^8.1.1",
-		"@storybook/react-webpack5": "8.1.1",
-		"@types/react": "^18.0.17",
-		"@types/react-dom": "^18.0.6",
-		"@typescript-eslint/eslint-plugin": "^5.36.2",
-		"@typescript-eslint/parser": "^5.36.2",
-		"autoprefixer": "^10.4.8",
-		"babel-loader": "^8.2.5",
-		"cssnano": "^5.1.13",
-		"emoji-datasource": "^14.0.0",
-		"eslint-import-resolver-typescript": "^3.3.0",
-		"eslint-plugin-import": "^2.26.0",
-		"eslint-plugin-jsx-a11y": "^6.6.1",
-		"eslint-plugin-react": "^7.31.8",
-		"eslint-plugin-react-hooks": "^4.6.0",
-		"fs-extra": "^10.1.0",
-		"glob": "^8.0.3",
-		"husky": "^8.0.1",
+		"@size-limit/preset-small-lib": "^11.2.0",
+		"autoprefixer": "^10.4.21",
+		"cssnano": "^7.0.6",
+		"emoji-datasource": "^15.1.2",
+		"fs-extra": "^11.3.0",
+		"glob": "^11.0.1",
+		"husky": "^9.1.7",
 		"lodash": "^4.17.21",
-		"react": "^18.2.0",
-		"react-dom": "^18.2.0",
-		"react-is": "^18.2.0",
 		"rollup-plugin-svg": "^2.0.0",
-		"size-limit": "^8.0.1",
-		"storybook": "8.1.1",
-		"tiny-invariant": "^1.2.0",
-		"tsdx": "^0.14.1",
-		"tslib": "^2.4.0",
-		"typescript": "^4.7.4"
+		"size-limit": "^11.2.0",
+		"tiny-invariant": "^1.3.3",
+		"tslib": "^2.8.1",
+		"tsup": "^8.4.0",
+		"tsup-preset-solid": "^2.2.0",
+		"typescript": "^5.8.2",
+		"vitest": "^1.2.1"
 	},
 	"dependencies": {
 		"flairup": "1.0.0"
-	}
+	},
+	"pnpm": {
+		"overrides": {
+			"@rollup/plugin-node-resolve": "13.3.0"
+		}
+	},
+	"types": "./dist/index.d.ts",
+	"browser": {},
+	"exports": {
+		"solid": "./dist/index.jsx",
+		"import": {
+			"types": "./dist/index.d.ts",
+			"default": "./dist/index.js"
+		},
+		"require": {
+			"types": "./dist/index.d.cts",
+			"default": "./dist/index.cjs"
+		}
+	},
+	"typesVersions": {}
 }

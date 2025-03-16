@@ -1,22 +1,22 @@
-import { cx } from 'flairup';
-import * as React from 'react';
+import { cx } from "flairup";
+import { For, Show } from "solid-js";
 
-import { commonStyles, stylesheet } from '../../Stylesheet/stylesheet';
+import { commonStyles, stylesheet } from "../../Stylesheet/stylesheet";
 import {
   MOUSE_EVENT_SOURCE,
   useEmojiStyleConfig,
   useReactionsConfig,
   useAllowExpandReactions,
-  useGetEmojiUrlConfig
-} from '../../config/useConfig';
-import { DataEmoji } from '../../dataUtils/DataTypes';
-import { emojiByUnified } from '../../dataUtils/emojiSelectors';
-import { useMouseDownHandlers } from '../../hooks/useMouseDownHandlers';
-import { useReactionsRef } from '../context/ElementRefContext';
-import { useReactionsModeState } from '../context/PickerContext';
-import { ClickableEmoji } from '../emoji/Emoji';
+  useGetEmojiUrlConfig,
+} from "../../config/useConfig";
+import type { DataEmoji } from "../../dataUtils/DataTypes";
+import { emojiByUnified } from "../../dataUtils/emojiSelectors";
+import { useMouseDownHandlers } from "../../hooks/useMouseDownHandlers";
+import { useReactionsRef } from "../context/ElementRefContext";
+import { useReactionsModeState } from "../context/PickerContext";
+import { ClickableEmoji } from "../emoji/Emoji";
 
-import { BtnPlus } from './BtnPlus';
+import { BtnPlus } from "./BtnPlus";
 
 export function Reactions() {
   const [reactionsOpen] = useReactionsModeState();
@@ -27,57 +27,60 @@ export function Reactions() {
   const allowExpandReactions = useAllowExpandReactions();
   const getEmojiUrl = useGetEmojiUrlConfig();
 
+  // If reactions are not open, return null
   if (!reactionsOpen) {
     return null;
   }
 
   return (
     <ul
-      className={cx(styles.list, !reactionsOpen && commonStyles.hidden)}
-      ref={ReactionsRef}
+      class={cx(styles.list, !reactionsOpen && commonStyles.hidden)}
+      ref={(el) => (ReactionsRef.current = el)}
     >
-      {reactions.map(reaction => (
-        <li key={reaction}>
-          <ClickableEmoji
-            emoji={emojiByUnified(reaction) as DataEmoji}
-            emojiStyle={emojiStyle}
-            unified={reaction}
-            showVariations={false}
-            className={cx(styles.emojiButton)}
-            noBackground
-            getEmojiUrl={getEmojiUrl}
-          />
-        </li>
-      ))}
-      {allowExpandReactions ? (
+      <For each={reactions}>
+        {(reaction) => (
+          <li>
+            <ClickableEmoji
+              emoji={emojiByUnified(reaction) as DataEmoji}
+              emojiStyle={emojiStyle}
+              unified={reaction}
+              showVariations={false}
+              class={cx(styles.emojiButton)}
+              noBackground
+              getEmojiUrl={getEmojiUrl}
+            />
+          </li>
+        )}
+      </For>
+      <Show when={allowExpandReactions}>
         <li>
           <BtnPlus />
         </li>
-      ) : null}
+      </Show>
     </ul>
   );
 }
 
 const styles = stylesheet.create({
   list: {
-    listStyle: 'none',
-    margin: '0',
-    padding: '0 5px',
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    height: '100%'
+    listStyle: "none",
+    margin: "0",
+    padding: "0 5px",
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    height: "100%",
   },
   emojiButton: {
-    ':hover': {
-      transform: 'scale(1.2)'
+    ":hover": {
+      transform: "scale(1.2)",
     },
-    ':focus': {
-      transform: 'scale(1.2)'
+    ":focus": {
+      transform: "scale(1.2)",
     },
-    ':active': {
-      transform: 'scale(1.1)'
+    ":active": {
+      transform: "scale(1.1)",
     },
-    transition: 'transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.5)'
-  }
+    transition: "transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.5)",
+  },
 });

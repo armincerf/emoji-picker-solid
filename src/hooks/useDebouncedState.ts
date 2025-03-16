@@ -1,24 +1,24 @@
-import { useRef, useState } from 'react';
+import { createSignal } from 'solid-js';
 
 export function useDebouncedState<T>(
   initialValue: T,
-  delay: number = 0
+  delay = 0
 ): [T, (value: T) => Promise<T>] {
-  const [state, setState] = useState<T>(initialValue);
-  const timer = useRef<number | null>(null);
+  const [state, setState] = createSignal<T>(initialValue);
+  let timer: number | null = null;
 
   function debouncedSetState(value: T) {
     return new Promise<T>(resolve => {
-      if (timer.current) {
-        clearTimeout(timer.current);
+      if (timer) {
+        clearTimeout(timer);
       }
 
-      timer.current = window?.setTimeout(() => {
-        setState(value);
+      timer = window?.setTimeout(() => {
+        setState(() => value);
         resolve(value);
       }, delay);
     });
   }
 
-  return [state, debouncedSetState];
+  return [state(), debouncedSetState];
 }

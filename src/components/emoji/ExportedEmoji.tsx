@@ -1,8 +1,6 @@
-import * as React from 'react';
-
 import { EmojiStyle } from '../../types/exposedTypes';
 
-import { GetEmojiUrl } from './BaseEmojiProps';
+import type { GetEmojiUrl } from './BaseEmojiProps';
 import { ViewOnlyEmoji } from './ViewOnlyEmoji';
 
 export function ExportedEmoji({

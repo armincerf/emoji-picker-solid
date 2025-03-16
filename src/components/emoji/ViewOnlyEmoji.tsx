@@ -1,73 +1,67 @@
-import * as React from 'react';
+import type { JSX } from "solid-js/jsx-runtime";
+import { emojiByUnified, emojiName } from "../../dataUtils/emojiSelectors";
+import { isCustomEmoji } from "../../typeRefinements/typeRefinements";
+import { EmojiStyle } from "../../types/exposedTypes";
+import { useEmojisThatFailedToLoadState } from "../context/PickerContext";
 
-import {
-  emojiByUnified,
-  emojiName,
-  emojiUrlByUnified
-} from '../../dataUtils/emojiSelectors';
-import { isCustomEmoji } from '../../typeRefinements/typeRefinements';
-import { EmojiStyle } from '../../types/exposedTypes';
-import { useEmojisThatFailedToLoadState } from '../context/PickerContext';
+import type { BaseEmojiProps } from "./BaseEmojiProps";
+import { EmojiImg } from "./EmojiImg";
+import { NativeEmoji } from "./NativeEmoji";
 
-import { BaseEmojiProps } from './BaseEmojiProps';
-import { EmojiImg } from './EmojiImg';
-import { NativeEmoji } from './NativeEmoji';
+export function ViewOnlyEmoji(props: BaseEmojiProps) {
+	const [, setEmojisThatFailedToLoad] = useEmojisThatFailedToLoadState();
 
-export function ViewOnlyEmoji({
-  emoji,
-  unified,
-  emojiStyle,
-  size,
-  lazyLoad,
-  getEmojiUrl = emojiUrlByUnified,
-  className
-}: BaseEmojiProps) {
-  const [, setEmojisThatFailedToLoad] = useEmojisThatFailedToLoadState();
+	const style = {} as JSX.CSSProperties;
+	if (props.size) {
+		style.width = style.height = style["font-size"] = `${props.size}px`;
+	}
 
-  const style = {} as React.CSSProperties;
-  if (size) {
-    style.width = style.height = style.fontSize = `${size}px`;
-  }
+	const emojiToRender = props.emoji
+		? props.emoji
+		: emojiByUnified(props.unified);
 
-  const emojiToRender = emoji ? emoji : emojiByUnified(unified);
+	if (!emojiToRender) {
+		return null;
+	}
 
-  if (!emojiToRender) {
-    return null;
-  }
+	if (isCustomEmoji(emojiToRender)) {
+		return (
+			<EmojiImg
+				style={style}
+				emojiName={props.unified}
+				emojiStyle={EmojiStyle.NATIVE}
+				lazyLoad={props.lazyLoad ?? false}
+				imgUrl={emojiToRender.imgUrl}
+				onError={onError}
+				class={props.class}
+			/>
+		);
+	}
 
-  if (isCustomEmoji(emojiToRender)) {
-    return (
-      <EmojiImg
-        style={style}
-        emojiName={unified}
-        emojiStyle={EmojiStyle.NATIVE}
-        lazyLoad={lazyLoad}
-        imgUrl={emojiToRender.imgUrl}
-        onError={onError}
-        className={className}
-      />
-    );
-  }
+	return (
+		<>
+			{props.emojiStyle === EmojiStyle.NATIVE ? (
+				<NativeEmoji
+					unified={props.unified}
+					style={style}
+					class={props.class}
+				/>
+			) : (
+				<EmojiImg
+					style={style}
+					emojiName={emojiName(emojiToRender)}
+					emojiStyle={props.emojiStyle}
+					lazyLoad={props.lazyLoad ?? false}
+					imgUrl={props.getEmojiUrl?.(props.unified, props.emojiStyle) ?? ""}
+					onError={onError}
+					class={props.class}
+				/>
+			)}
+		</>
+	);
 
-  return (
-    <>
-      {emojiStyle === EmojiStyle.NATIVE ? (
-        <NativeEmoji unified={unified} style={style} className={className} />
-      ) : (
-        <EmojiImg
-          style={style}
-          emojiName={emojiName(emojiToRender)}
-          emojiStyle={emojiStyle}
-          lazyLoad={lazyLoad}
-          imgUrl={getEmojiUrl(unified, emojiStyle)}
-          onError={onError}
-          className={className}
-        />
-      )}
-    </>
-  );
-
-  function onError() {
-    setEmojisThatFailedToLoad(prev => new Set(prev).add(unified));
-  }
+	function onError() {
+		//@ts-ignore
+		setEmojisThatFailedToLoad((prev) => new Set(prev).add(props.unified));
+	}
 }

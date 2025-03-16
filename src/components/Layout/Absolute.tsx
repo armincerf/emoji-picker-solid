@@ -1,15 +1,15 @@
-import * as React from 'react';
+import type { JSX } from "solid-js/jsx-runtime";
 
 type Props = Readonly<{
-  children: React.ReactNode;
-  className?: string;
-  style?: React.CSSProperties;
+	children: JSX.Element;
+	className?: string;
+	style?: JSX.CSSProperties;
 }>;
 
 export default function Absolute({ children, className, style }: Props) {
-  return (
-    <div style={{ ...style, position: 'absolute' }} className={className}>
-      {children}
-    </div>
-  );
+	return (
+		<div style={{ ...style, position: "absolute" }} class={className}>
+			{children}
+		</div>
+	);
 }

@@ -1,5 +1,5 @@
 import { cx } from 'flairup';
-import * as React from 'react';
+
 
 import { darkMode, stylesheet } from '../../Stylesheet/stylesheet';
 import { Button } from '../atoms/Button';
@@ -14,7 +14,7 @@ export function BtnPlus() {
       aria-label="Show all Emojis"
       title="Show all Emojis"
       tabIndex={0}
-      className={cx(styles.plusSign)}
+      class={cx(styles.plusSign)}
       onClick={() => setReactionsMode(false)}
     />
   );

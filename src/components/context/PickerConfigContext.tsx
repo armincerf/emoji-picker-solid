@@ -1,69 +1,82 @@
-import * as React from 'react';
-
-import { compareConfig } from '../../config/compareConfig';
 import {
-  basePickerConfig,
-  mergeConfig,
-  PickerConfig,
-  PickerConfigInternal
-} from '../../config/config';
+	createContext,
+	useContext,
+	createSignal,
+	createEffect,
+	type JSX,
+} from "solid-js";
+
+import { compareConfig } from "../../config/compareConfig";
+import {
+	basePickerConfig,
+	mergeConfig,
+	type PickerConfig,
+	type PickerConfigInternal,
+} from "../../config/config";
 
 type Props = PickerConfig &
-  Readonly<{
-    children: React.ReactNode;
-  }>;
+	Readonly<{
+		children: JSX.Element;
+	}>;
 
-const ConfigContext = React.createContext<PickerConfigInternal>(
-  basePickerConfig()
-);
+const ConfigContext = createContext<PickerConfigInternal>(basePickerConfig());
 
-export function PickerConfigProvider({ children, ...config }: Props) {
-  const mergedConfig = useSetConfig(config);
+export function PickerConfigProvider(props: Props) {
+	const { children, ...config } = props;
+	const mergedConfig = useSetConfig(config);
 
-  return (
-    <ConfigContext.Provider value={mergedConfig}>
-      {children}
-    </ConfigContext.Provider>
-  );
+	return (
+		<ConfigContext.Provider value={mergedConfig}>
+			{children}
+		</ConfigContext.Provider>
+	);
 }
 
 export function useSetConfig(config: PickerConfig) {
-  const [mergedConfig, setMergedConfig] = React.useState(() =>
-    mergeConfig(config)
-  );
+	const [mergedConfig, setMergedConfig] = createSignal(mergeConfig(config));
 
-  React.useEffect(() => {
-    if (compareConfig(mergedConfig, config)) {
-      return;
-    }
-    setMergedConfig(mergeConfig(config));
-    // not gonna...
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    config.customEmojis?.length,
-    config.open,
-    config.emojiVersion,
-    config.reactionsDefaultOpen,
-    config.searchPlaceHolder,
-    config.searchPlaceholder,
-    config.defaultSkinTone,
-    config.skinTonesDisabled,
-    config.autoFocusSearch,
-    config.emojiStyle,
-    config.theme,
-    config.suggestedEmojisMode,
-    config.lazyLoadEmojis,
-    config.className,
-    config.height,
-    config.width,
-    config.searchDisabled,
-    config.skinTonePickerLocation,
-    config.allowExpandReactions
-  ]);
+	createEffect(() => {
+		// Check if any of the config properties have changed
+		if (compareConfig(mergedConfig(), config)) {
+			return;
+		}
+		setMergedConfig(mergeConfig(config));
+	});
 
-  return mergedConfig;
+	// We need to create dependencies for all the config properties
+	// This is similar to the dependency array in React's useEffect
+	createEffect(() => {
+		// Access all the properties to create reactive dependencies
+		config.customEmojis?.length;
+		config.open;
+		config.emojiVersion;
+		config.reactionsDefaultOpen;
+		config.searchPlaceHolder;
+		config.searchPlaceholder;
+		config.defaultSkinTone;
+		config.skinTonesDisabled;
+		config.autoFocusSearch;
+		config.emojiStyle;
+		config.theme;
+		config.suggestedEmojisMode;
+		config.lazyLoadEmojis;
+		config.className;
+		config.height;
+		config.width;
+		config.searchDisabled;
+		config.skinTonePickerLocation;
+		config.allowExpandReactions;
+	});
+
+	return mergedConfig();
 }
 
 export function usePickerConfig() {
-  return React.useContext(ConfigContext);
+	const context = useContext(ConfigContext);
+
+	if (!context) {
+		throw new Error("usePickerConfig: cannot find a ConfigContext");
+	}
+
+	return context;
 }

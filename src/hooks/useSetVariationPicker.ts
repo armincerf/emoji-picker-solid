@@ -1,4 +1,4 @@
-import { emojiFromElement, NullableElement } from '../DomUtils/selectors';
+import { emojiFromElement, type NullableElement } from '../DomUtils/selectors';
 import { useSetAnchoredEmojiRef } from '../components/context/ElementRefContext';
 import { useEmojiVariationPickerState } from '../components/context/PickerContext';
 

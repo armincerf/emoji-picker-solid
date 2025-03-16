@@ -1,4 +1,4 @@
-import * as React from 'react';
+
 
 import { ClassNames, asSelectors } from '../../../DomUtils/classNames';
 import { getNormalizedSearchTerm } from '../../../hooks/useFilter';

@@ -1,4 +1,4 @@
-import { PickerConfig } from './config';
+import type { PickerConfig } from './config';
 
 // eslint-disable-next-line complexity
 export function compareConfig(prev: PickerConfig, next: PickerConfig) {

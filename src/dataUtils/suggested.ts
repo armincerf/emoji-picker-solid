@@ -1,6 +1,6 @@
-import { SkinTones, SuggestionMode } from '../types/exposedTypes';
+import { type SkinTones, SuggestionMode } from '../types/exposedTypes';
 
-import { DataEmoji } from './DataTypes';
+import type { DataEmoji } from './DataTypes';
 import { emojiUnified } from './emojiSelectors';
 
 const SUGGESTED_LS_KEY = 'epr_suggested';

@@ -1,5 +1,5 @@
 import { scrollTo } from '../DomUtils/scrollTo';
-import { NullableElement } from '../DomUtils/selectors';
+import type { NullableElement } from '../DomUtils/selectors';
 import {
   useBodyRef,
   usePickerMainRef

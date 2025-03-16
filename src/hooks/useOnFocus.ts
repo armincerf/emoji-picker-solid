@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { createEffect } from 'solid-js';
 
 import { buttonFromTarget, emojiFromElement } from '../DomUtils/selectors';
 import { useBodyRef } from '../components/context/ElementRefContext';
@@ -13,7 +13,7 @@ export function useOnFocus() {
   const emojiStyle = useEmojiStyleConfig();
   const getEmojiUrl = useGetEmojiUrlConfig();
 
-  useEffect(() => {
+  createEffect(() => {
     if (emojiStyle === EmojiStyle.NATIVE) {
       return;
     }
@@ -43,5 +43,5 @@ export function useOnFocus() {
         preloadEmoji(getEmojiUrl, emoji, emojiStyle);
       }
     }
-  }, [BodyRef, emojiStyle, getEmojiUrl]);
+  });
 }

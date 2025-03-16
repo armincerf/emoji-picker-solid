@@ -1,4 +1,4 @@
-import { DataEmoji } from './DataTypes';
+import type { DataEmoji } from './DataTypes';
 import { allEmojis, emojiNames, emojiUnified } from './emojiSelectors';
 
 export const alphaNumericEmojiIndex: BaseIndex = {};

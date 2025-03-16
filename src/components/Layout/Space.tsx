@@ -1,12 +1,10 @@
-import { cx } from 'flairup';
-import * as React from 'react';
-
+import type { JSX } from "solid-js/jsx-runtime";
 
 type Props = Readonly<{
-  className?: string;
-  style?: React.CSSProperties;
+	className?: string;
+	style?: JSX.CSSProperties;
 }>;
 
 export default function Space({ className, style = {} }: Props) {
-  return <div style={{ flex: 1, ...style }} className={cx(className)} />;
+	return <div style={{ flex: 1, ...style }} class={className} />;
 }

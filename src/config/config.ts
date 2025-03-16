@@ -1,13 +1,13 @@
-import * as React from 'react';
+import type { JSX } from 'solid-js';
 
 import { DEFAULT_REACTIONS } from '../components/Reactions/DEFAULT_REACTIONS';
-import { GetEmojiUrl } from '../components/emoji/BaseEmojiProps';
+import type { GetEmojiUrl } from '../components/emoji/BaseEmojiProps';
 import {
   setCustomEmojis,
   emojiUrlByUnified
 } from '../dataUtils/emojiSelectors';
 import {
-  EmojiClickData,
+  type EmojiClickData,
   EmojiStyle,
   SkinTonePickerLocation,
   SkinTones,
@@ -16,11 +16,11 @@ import {
 } from '../types/exposedTypes';
 
 import {
-  CategoriesConfig,
+  type CategoriesConfig,
   baseCategoriesConfig,
   mergeCategoriesConfig
 } from './categoryConfig';
-import { CustomEmoji } from './customEmojiConfig';
+import type { CustomEmoji } from './customEmojiConfig';
 
 const KNOWN_FAILING_EMOJIS = ['2640-fe0f', '2642-fe0f', '2695-fe0f'];
 
@@ -29,9 +29,9 @@ export const SEARCH_RESULTS_NO_RESULTS_FOUND = 'No results found';
 export const SEARCH_RESULTS_SUFFIX =
   ' found. Use up and down arrow keys to navigate.';
 export const SEARCH_RESULTS_ONE_RESULT_FOUND =
-  '1 result' + SEARCH_RESULTS_SUFFIX;
+  `1 result${SEARCH_RESULTS_SUFFIX}`;
 export const SEARCH_RESULTS_MULTIPLE_RESULTS_FOUND =
-  '%n results' + SEARCH_RESULTS_SUFFIX;
+  `%n results${SEARCH_RESULTS_SUFFIX}`;
 
 export function mergeConfig(
   userConfig: PickerConfig = {}
@@ -115,7 +115,7 @@ export type PickerConfigInternal = {
   className: string;
   height: PickerDimensions;
   width: PickerDimensions;
-  style: React.CSSProperties;
+  style: JSX.CSSProperties;
   getEmojiUrl: GetEmojiUrl;
   searchDisabled: boolean;
   skinTonePickerLocation: SkinTonePickerLocation;

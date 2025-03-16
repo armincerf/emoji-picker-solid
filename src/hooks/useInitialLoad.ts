@@ -1,10 +1,9 @@
-import { useEffect } from 'react';
-import * as React from 'react';
+import { createEffect, type Setter } from 'solid-js';
 
 export function useMarkInitialLoad(
-  dispatch: React.Dispatch<React.SetStateAction<boolean>>
+  dispatch: Setter<boolean>
 ) {
-  useEffect(() => {
+  createEffect(() => {
     dispatch(true);
-  }, [dispatch]);
+  });
 }

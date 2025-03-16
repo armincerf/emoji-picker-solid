@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { createMemo } from 'solid-js';
 
 import { useBodyRef } from '../components/context/ElementRefContext';
 
@@ -9,11 +9,11 @@ import {
   closestScrollBody,
   emojiDistanceFromScrollTop,
   isEmojiBehindLabel,
-  NullableElement,
+  type NullableElement,
   queryScrollBody
 } from './selectors';
 
-export function scrollTo(root: NullableElement, top: number = 0) {
+export function scrollTo(root: NullableElement, top = 0) {
   const $eprBody = queryScrollBody(root);
 
   if (!$eprBody) {
@@ -40,16 +40,15 @@ export function scrollBy(root: NullableElement, by: number): void {
 export function useScrollTo() {
   const BodyRef = useBodyRef();
 
-  return useCallback(
-    (top: number) => {
+  return createMemo(() => {
+    return (top: number) => {
       requestAnimationFrame(() => {
         if (BodyRef.current) {
           BodyRef.current.scrollTop = top;
         }
       });
-    },
-    [BodyRef]
-  );
+    };
+  });
 }
 
 export function scrollEmojiAboveLabel(emoji: NullableElement) {

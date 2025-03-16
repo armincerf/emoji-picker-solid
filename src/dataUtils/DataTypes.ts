@@ -1,4 +1,4 @@
-import emojis from '../data/emojis';
+import type emojis from '../data/emojis';
 
 export enum EmojiProperties {
   name = 'n',

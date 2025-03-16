@@ -1,5 +1,4 @@
-import * as React from 'react';
-import { useEffect } from 'react';
+import { createEffect, type Setter } from 'solid-js';
 
 import { detectEmojyPartiallyBelowFold } from '../DomUtils/detectEmojyPartiallyBelowFold';
 import { focusElement } from '../DomUtils/focusElement';
@@ -8,22 +7,20 @@ import {
   buttonFromTarget
 } from '../DomUtils/selectors';
 import { useBodyRef } from '../components/context/ElementRefContext';
-import { PreviewEmoji } from '../components/footer/Preview';
+import type { PreviewEmoji } from '../components/footer/Preview';
 
 import {
-  useAllowMouseMove,
   useIsMouseDisallowed
 } from './useDisallowMouseMove';
 
 export function useEmojiPreviewEvents(
   allow: boolean,
-  setPreviewEmoji: React.Dispatch<React.SetStateAction<PreviewEmoji>>
+  setPreviewEmoji: Setter<PreviewEmoji>
 ) {
   const BodyRef = useBodyRef();
   const isMouseDisallowed = useIsMouseDisallowed();
-  const allowMouseMove = useAllowMouseMove();
 
-  useEffect(() => {
+  createEffect(() => {
     if (!allow) {
       return;
     }
@@ -46,13 +43,15 @@ export function useEmojiPreviewEvents(
       const button = buttonFromTarget(e.target as HTMLElement);
 
       if (!button) {
-        return onLeave();
+        onLeave();
+        return;
       }
 
       const { unified, originalUnified } = allUnifiedFromEmojiElement(button);
 
       if (!unified || !originalUnified) {
-        return onLeave();
+        onLeave();
+        return;
       }
 
       setPreviewEmoji({
@@ -60,17 +59,20 @@ export function useEmojiPreviewEvents(
         originalUnified
       });
     }
+    
     function onLeave(e?: FocusEvent | MouseEvent) {
       if (e) {
         const relatedTarget = e.relatedTarget as HTMLElement;
 
         if (!buttonFromTarget(relatedTarget)) {
-          return setPreviewEmoji(null);
+          setPreviewEmoji(null);
+          return;
         }
       }
 
       setPreviewEmoji(null);
     }
+    
     function onEscape(e: KeyboardEvent) {
       if (e.key === 'Escape') {
         setPreviewEmoji(null);
@@ -102,12 +104,12 @@ export function useEmojiPreviewEvents(
       bodyRef?.removeEventListener('blur', onLeave, true);
       bodyRef?.removeEventListener('keydown', onEscape);
     };
-  }, [BodyRef, allow, setPreviewEmoji, isMouseDisallowed, allowMouseMove]);
+  });
 }
 
 function handlePartiallyVisibleElementFocus(
   button: HTMLElement,
-  setPreviewEmoji: React.Dispatch<React.SetStateAction<PreviewEmoji>>
+  setPreviewEmoji: Setter<PreviewEmoji>
 ) {
   const { unified, originalUnified } = allUnifiedFromEmojiElement(button);
 

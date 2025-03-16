@@ -1,7 +1,7 @@
-import * as React from 'react';
+import type { JSX } from 'solid-js';
 
 import { usePickerConfig } from '../components/context/PickerConfigContext';
-import {
+import type {
   EmojiClickData,
   EmojiStyle,
   SkinTonePickerLocation,
@@ -10,16 +10,16 @@ import {
   Theme
 } from '../types/exposedTypes';
 
-import { CategoriesConfig } from './categoryConfig';
+import type { CategoriesConfig } from './categoryConfig';
 import {
   DEFAULT_SEARCH_PLACEHOLDER,
   SEARCH_RESULTS_NO_RESULTS_FOUND,
   SEARCH_RESULTS_ONE_RESULT_FOUND,
   SEARCH_RESULTS_MULTIPLE_RESULTS_FOUND,
-  PickerDimensions,
-  PreviewConfig
+  type PickerDimensions,
+  type PreviewConfig
 } from './config';
-import { CustomEmoji } from './customEmojiConfig';
+import type { CustomEmoji } from './customEmojiConfig';
 import { useMutableConfig } from './mutableConfig';
 
 export enum MOUSE_EVENT_SOURCE {
@@ -122,9 +122,9 @@ export function useClassNameConfig(): string {
   return className;
 }
 
-export function useStyleConfig(): React.CSSProperties {
+export function useStyleConfig(): JSX.CSSProperties {
   const { height, width, style } = usePickerConfig();
-  return { height: getDimension(height), width: getDimension(width), ...style };
+  return { height: `${getDimension(height)}px`, width: `${getDimension(width)}px`, ...style };
 }
 
 export function useReactionsOpenConfig(): boolean {

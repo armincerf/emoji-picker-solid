@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { createEffect } from 'solid-js';
 
 import { useBodyRef } from '../components/context/ElementRefContext';
 import { useDisallowMouseRef } from '../components/context/PickerContext';
@@ -29,7 +29,7 @@ export function useOnMouseMove() {
   const allowMouseMove = useAllowMouseMove();
   const isMouseDisallowed = useIsMouseDisallowed();
 
-  useEffect(() => {
+  createEffect(() => {
     const bodyRef = BodyRef.current;
     bodyRef?.addEventListener('mousemove', onMouseMove, {
       passive: true
@@ -43,5 +43,5 @@ export function useOnMouseMove() {
     return () => {
       bodyRef?.removeEventListener('mousemove', onMouseMove);
     };
-  }, [BodyRef, allowMouseMove, isMouseDisallowed]);
+  });
 }

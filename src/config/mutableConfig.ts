@@ -1,6 +1,6 @@
-import React from 'react';
+import { createContext, useContext, createEffect } from 'solid-js';
 
-import {MouseDownEvent, OnSkinToneChange} from './config';
+import type {MouseDownEvent, OnSkinToneChange} from './config';
 
 export type MutableConfig = {
   onEmojiClick?: MouseDownEvent;
@@ -8,33 +8,37 @@ export type MutableConfig = {
   onSkinToneChange?: OnSkinToneChange;
 };
 
-export const MutableConfigContext = React.createContext<
-  React.MutableRefObject<MutableConfig>
->({} as React.MutableRefObject<MutableConfig>);
+export type MutableConfigRef = {
+  current: MutableConfig;
+};
 
-export function useMutableConfig(): React.MutableRefObject<MutableConfig> {
-  const mutableConfig = React.useContext(MutableConfigContext);
+export const MutableConfigContext = createContext<MutableConfigRef>({} as MutableConfigRef);
+
+export function useMutableConfig(): MutableConfigRef {
+  const mutableConfig = useContext(MutableConfigContext);
   return mutableConfig;
 }
 
 export function useDefineMutableConfig(
   config: MutableConfig
-): React.MutableRefObject<MutableConfig> {
-  const MutableConfigRef = React.useRef<MutableConfig>({
-    onEmojiClick: config.onEmojiClick || emptyFunc,
-    onReactionClick: config.onReactionClick || config.onEmojiClick,
-    onSkinToneChange: config.onSkinToneChange || emptyFunc
-  });
+): MutableConfigRef {
+  const MutableConfigRef: MutableConfigRef = {
+    current: {
+      onEmojiClick: config.onEmojiClick || emptyFunc,
+      onReactionClick: config.onReactionClick || config.onEmojiClick,
+      onSkinToneChange: config.onSkinToneChange || emptyFunc
+    }
+  };
 
-  React.useEffect(() => {
+  createEffect(() => {
     MutableConfigRef.current.onEmojiClick = config.onEmojiClick || emptyFunc;
     MutableConfigRef.current.onReactionClick =
       config.onReactionClick || config.onEmojiClick;
-  }, [config.onEmojiClick, config.onReactionClick]);
+  });
 
-  React.useEffect(() => {
+  createEffect(() => {
     MutableConfigRef.current.onSkinToneChange = config.onSkinToneChange || emptyFunc;
-  }, [config.onSkinToneChange])
+  });
 
   return MutableConfigRef;
 }
